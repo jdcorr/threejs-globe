@@ -1,0 +1,98 @@
+<html>
+	<head>
+		<title>Hello World</title>
+		<style>canvas { width: 100%; height: 100% }</style>
+		<link rel="stylesheet" href="world.css">
+	</head>
+	<body>
+		<div id="controls">
+			<h3>Three.JS Hello World</h3>
+			<form>
+				<label>Rotation X<input type="range" name="rotX" min="0" max="10" value="0"></label><br/>
+				<label>Rotation Y<input type="range" name="rotY" min="0" max="10" value="1"></label><br/>
+				<label>Rotation Z<input type="range" name="rotZ" min="0" max="10" value="0"></label><br/>
+				<br/>
+				<label>Camera Zoom<input type="range" name="camZ" min="5" max="10" value="8"></label><br/>
+				<br/>
+				<label>Light X<input type="range" name="lightX" min="0" max="15" value="1"></label><br/>
+				<label>Light Y<input type="range" name="lightY" min="0" max="15" value="1"></label><br/>
+				<label>Light Z<input type="range" name="lightZ" min="0" max="15" value="1"></label><br/>
+			</form>
+		</div>
+		<div id="viewport">
+		</div>
+		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+		<script>
+			$(document).ready( function () {
+				console.log('hello');
+				var scene = new THREE.Scene();
+				scene.fog.color
+				var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+				var objects = new Array();
+				var projector = new THREE.Projector();
+				var renderer = new THREE.WebGLRenderer();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				$("#viewport").append(renderer.domElement);
+
+				// defines geometrical object
+				var geometry = new THREE.SphereGeometry(3,16,12);
+
+				// material
+		        var material = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture( "./texture.jpg" )});
+		        //var material = new THREE.MeshNormalMaterial({color: 0xffffff, linewidth:1});
+
+		        var sphere = new THREE.Mesh(geometry, material);
+				scene.add(sphere);
+
+		        // lights
+		        var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+				scene.add( light );
+
+				var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+				directionalLight.position.set( 0, 1, 1 );
+				scene.add( directionalLight );
+
+				camera.position.z = 5;
+
+				// For click events
+				//$("#viewport").on( 'mousedown', onViewportMouseDown);
+
+				// To fix resize perspective issues
+				window.addEventListener( 'resize', onWindowResize, false );
+
+				var render = function () {
+					requestAnimationFrame(render);
+
+					// Rotation
+					sphere.rotation.x += $('input[name="rotX"]').val() / 1000;
+					sphere.rotation.y += $('input[name="rotY"]').val() / 1000;
+					sphere.rotation.z += $('input[name="rotZ"]').val() / 1000;
+
+					// Camera Positioning
+					var newCamZ = ($('input[name="camZ"]').val() - camera.position.z)/ 6;
+					camera.position.z += newCamZ;
+
+					// Light Positioning
+					directionalLight.position.x = $('input[name="lightX"]').val();
+					directionalLight.position.y = $('input[name="lightY"]').val();
+					directionalLight.position.z = $('input[name="lightZ"]').val();
+
+					renderer.render(scene, camera);
+				};
+
+				function onWindowResize() {
+
+					camera.aspect = window.innerWidth / window.innerHeight;
+					camera.updateProjectionMatrix();
+
+					renderer.setSize( window.innerWidth, window.innerHeight );
+				}
+
+				render();
+			});			
+		</script>
+	</body>
+</html>
