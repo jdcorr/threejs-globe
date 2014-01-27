@@ -1,7 +1,7 @@
 threejs-helloworld
 ==================
 
-#Three.js Hello World
+###Three.js Hello World
 
 Simple proof of concept outlining how to create a scene, geometrical objects, textures, lights, along with manipulation of these elements.
 
